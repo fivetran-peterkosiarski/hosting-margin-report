@@ -112,3 +112,58 @@ Period analyzed: **February 2026** (vs January 2026)
 ### Estimated Financial Impact
 - Full uplift to 70% across all material sub-70% accounts: **$5,232,647 annualized**.
 - Near-term focus on top 5 accounts captures **$1,553,519 annualized** (29.7% of total opportunity).
+
+## Top 20 Material Named Accounts by Margin Impact
+### Summary Metrics (Top Panel)
+- Total margin impact across top 20 material named accounts: **$-1,128,137**.
+- Worst single account: **Virgo Facilities** ($-191,398).
+- Count of accounts with cost but zero revenue: **4**.
+- Highest cost per sync hour: **Capella Space** at **$438.61/hr**.
+
+### Dollar Impact Chart Data (Worst to Best)
+| Rank | Account | Margin $ |
+|---:|---|---:|
+| 1 | Virgo Facilities | $-191,398 |
+| 2 | Krazybee Services Private Limited | $-91,836 |
+| 3 | Numeral | $-84,061 |
+| 4 | Mara_Care_AG | $-79,098 |
+| 5 | OPTIMIND Inc.株式会社オプティマインド | $-76,330 |
+| 6 | Rhombus AI | $-69,032 |
+| 7 | Modern_AI_LLC | $-60,349 |
+| 8 | Capella Space | $-60,209 |
+| 9 | YPrime | $-52,933 |
+| 10 | FivetranAnalytics | $-52,667 |
+| 11 | U.S. Venture, Inc. | $-48,185 |
+| 12 | PT_Mata_Gunung_Altazor | $-41,735 |
+| 13 | Firehouse_Technology | $-39,327 |
+| 14 | Shutterstock Inc. | $-31,304 |
+| 15 | Gilion | $-30,710 |
+| 16 | Circular | $-28,143 |
+| 17 | Cifra_Labs | $-24,972 |
+| 18 | Irvine Company - BCF Account | $-23,642 |
+| 19 | Metronome | $-22,491 |
+| 20 | NISSIN FOODS HOLDINGS CO., LTD. | $-19,714 |
+
+### Account-Level Breakdown Table
+| Account | Customer Tier | Annualized Revenue | Annualized Cost | Margin $ | Margin % | Runtime (hrs) | Cost / Runtime hr | Key Drivers |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| Virgo Facilities | Unspecified | $299,328 | $490,726 | $-191,398 | -63.9% | 11,425.3 | $42.95 | DLW cost, low scale |
+| Krazybee Services Private Limited | Unspecified | $0 | $91,836 | $-91,836 | 0.0% | 3,536.3 | $25.97 | no revenue, connection |
+| Numeral | Unspecified | $547,160 | $631,221 | $-84,061 | -15.4% | 52,643.9 | $11.99 | DLW cost, low scale |
+| Mara_Care_AG | Enterprise | $753 | $79,851 | $-79,098 | -10511.1% | 467.5 | $170.80 | connection, low scale |
+| OPTIMIND Inc.株式会社オプティマインド | Enterprise | $3,042 | $79,372 | $-76,330 | -2509.2% | 7,803.2 | $10.17 | connection, low scale |
+| Rhombus AI | Freemium | $0 | $69,032 | $-69,032 | 0.0% | 2,176.1 | $31.72 | no revenue, DLW cost |
+| Modern_AI_LLC | Standard | $133,889 | $194,238 | $-60,349 | -45.1% | 54,869.6 | $3.54 | DLW cost, low scale |
+| Capella Space | BCF | $13,039 | $73,248 | $-60,209 | -461.7% | 167.0 | $438.61 | connection, low scale |
+| YPrime | Unspecified | $121,302 | $174,235 | $-52,933 | -43.6% | 26,046.6 | $6.69 | connection, low scale |
+| FivetranAnalytics | BCF | $0 | $52,667 | $-52,667 | 0.0% | 7,360.1 | $7.16 | no revenue, connection |
+| U.S. Venture, Inc. | BCF | $72,028 | $120,213 | $-48,185 | -66.9% | 590.1 | $203.70 | DLW cost, low scale |
+| PT_Mata_Gunung_Altazor | Enterprise | $388 | $42,124 | $-41,735 | -10751.0% | 355.1 | $118.63 | DLW cost, low scale |
+| Firehouse_Technology | Enterprise | $4,607 | $43,934 | $-39,327 | -853.6% | 11,394.3 | $3.86 | DLW cost, low scale |
+| Shutterstock Inc. | Unspecified | $249,880 | $281,184 | $-31,304 | -12.5% | 8,750.5 | $32.13 | DLW cost, low scale |
+| Gilion | Standard | $18,556 | $49,266 | $-30,710 | -165.5% | 9,879.0 | $4.99 | connection, low scale |
+| Circular | Enterprise | $12,734 | $40,877 | $-28,143 | -221.0% | 4,576.2 | $8.93 | connection, low scale |
+| Cifra_Labs | Enterprise | $535 | $25,507 | $-24,972 | -4668.0% | 2,319.5 | $11.00 | DLW cost, low scale |
+| Irvine Company - BCF Account | BCF | $22,445 | $46,087 | $-23,642 | -105.3% | 1,745.2 | $26.41 | connection, low scale |
+| Metronome | BCF | $240,936 | $263,427 | $-22,491 | -9.3% | 1,993.6 | $132.14 | DLW cost, low scale |
+| NISSIN FOODS HOLDINGS CO., LTD. | Unspecified | $0 | $19,714 | $-19,714 | 0.0% | 218.0 | $90.44 | no revenue, connection |
