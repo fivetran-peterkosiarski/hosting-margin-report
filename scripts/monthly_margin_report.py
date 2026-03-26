@@ -51,11 +51,13 @@ def load_month(path):
                 'cost': 0.0,
                 'connections_cost': 0.0,
                 'dlw_cost': 0.0,
+                'runtime_hrs': 0.0,
             })
             item['revenue'] += rev
             item['cost'] += cost
             item['connections_cost'] += float(r.get('Account Connections Cost') or 0.0)
             item['dlw_cost'] += float(r.get('Account DLW Cost') or 0.0)
+            item['runtime_hrs'] += float(r.get('Total Donkey Runtime (hrs)') or 0.0)
             if item['tier'] == 'Unspecified':
                 item['tier'] = (r.get('Simplified Platform Tier') or '').strip() or item['tier']
             if item['is_pbf'] not in ('true', 'false'):
@@ -63,6 +65,8 @@ def load_month(path):
     rows = list(by_account.values())
     for row in rows:
         row['gm'] = (row['revenue'] - row['cost']) / row['revenue'] if row['revenue'] else 0.0
+        row['margin_dollar'] = row['revenue'] - row['cost']
+        row['cost_per_runtime_hr'] = (row['cost'] / row['runtime_hrs']) if row['runtime_hrs'] > 0 else None
     return rows
 
 
@@ -291,6 +295,69 @@ lines.append('')
 lines.append('### Estimated Financial Impact')
 lines.append(f"- Full uplift to 70% across all material sub-70% accounts: **{fnum(total_excess)} annualized**.")
 lines.append(f"- Near-term focus on top 5 accounts captures **{fnum(top5_excess)} annualized** ({fpct(top5_excess/total_excess) if total_excess else '0.0%'} of total opportunity).")
+
+# Top 20 material named accounts by margin impact
+def classify_drivers(row):
+    drivers = []
+    rev = row['revenue']
+    cost = row['cost']
+    if rev == 0 and cost > 0:
+        drivers.append('no revenue')
+    if cost > 0 and row['dlw_cost'] / cost >= 0.60:
+        drivers.append('DLW cost')
+    if cost > 0 and row['connections_cost'] / cost >= 0.40:
+        drivers.append('connection')
+    if rev > 0 and (rev < 50000 or rev < cost * 1.2):
+        drivers.append('low scale')
+    if not drivers:
+        drivers.append('mixed')
+    # Keep to 1-2 drivers per prompt.
+    return ', '.join(drivers[:2])
+
+top20_pool = []
+for r in latest_rows:
+    is_material = r['revenue'] > 20000 or r['cost'] > 1000
+    zero_rev_exception = r['revenue'] == 0 and r['cost'] > 1000
+    is_named = r['account'] != '(Unmapped Account)'
+    if is_named and (is_material or zero_rev_exception) and r['margin_dollar'] < 0:
+        top20_pool.append(r)
+top20 = sorted(top20_pool, key=lambda r: abs(r['margin_dollar']), reverse=True)[:20]
+
+top20_total_margin = sum(r['margin_dollar'] for r in top20)
+worst_single = min(top20, key=lambda r: r['margin_dollar']) if top20 else None
+zero_rev_count = sum(1 for r in top20 if r['revenue'] == 0 and r['cost'] > 0)
+with_runtime = [r for r in top20 if r['cost_per_runtime_hr'] is not None]
+highest_cost_runtime = max(with_runtime, key=lambda r: r['cost_per_runtime_hr']) if with_runtime else None
+
+lines.append('')
+lines.append('## Top 20 Material Named Accounts by Margin Impact')
+lines.append('### Summary Metrics (Top Panel)')
+lines.append(f"- Total margin impact across top 20 material named accounts: **{fnum(top20_total_margin)}**.")
+if worst_single:
+    lines.append(f"- Worst single account: **{worst_single['account']}** ({fnum(worst_single['margin_dollar'])}).")
+lines.append(f"- Count of accounts with cost but zero revenue: **{zero_rev_count}**.")
+if highest_cost_runtime:
+    lines.append(f"- Highest cost per sync hour: **{highest_cost_runtime['account']}** at **${highest_cost_runtime['cost_per_runtime_hr']:,.2f}/hr**.")
+else:
+    lines.append("- Highest cost per sync hour: **N/A** (runtime data unavailable for selected accounts).")
+
+lines.append('')
+lines.append('### Dollar Impact Chart Data (Worst to Best)')
+lines.append('| Rank | Account | Margin $ |')
+lines.append('|---:|---|---:|')
+for idx, r in enumerate(sorted(top20, key=lambda x: x['margin_dollar']), start=1):
+    lines.append(f"| {idx} | {r['account']} | {fnum(r['margin_dollar'])} |")
+
+lines.append('')
+lines.append('### Account-Level Breakdown Table')
+lines.append('| Account | Customer Tier | Annualized Revenue | Annualized Cost | Margin $ | Margin % | Runtime (hrs) | Cost / Runtime hr | Key Drivers |')
+lines.append('|---|---|---:|---:|---:|---:|---:|---:|---|')
+for r in sorted(top20, key=lambda x: x['margin_dollar']):
+    runtime = f"{r['runtime_hrs']:,.1f}" if r['runtime_hrs'] else '0.0'
+    cphr = f"${r['cost_per_runtime_hr']:,.2f}" if r['cost_per_runtime_hr'] is not None else 'N/A'
+    lines.append(
+        f"| {r['account']} | {r['tier']} | {fnum(r['revenue'])} | {fnum(r['cost'])} | {fnum(r['margin_dollar'])} | {fpct(r['gm'])} | {runtime} | {cphr} | {classify_drivers(r)} |"
+    )
 
 with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
     f.write('\n'.join(lines) + '\n')
