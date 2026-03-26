@@ -66,3 +66,45 @@ Output format:
 
 Write the final report to outputs/monthly_margin_report.md.
 If code is needed, create or update scripts in this repo and run them.
+
+In addition to the standard FP&A analysis, produce a structured "Top Accounts by Margin Impact" section with the following format:
+
+1. Summary Metrics (Top Panel)
+- Total margin impact across top 20 material named accounts (sum of margin $)
+- Worst single account (by margin $)
+- Count of accounts with cost but zero revenue
+- Highest cost per sync hour (if runtime available)
+
+2. Top Accounts Selection
+- Identify the top 20 material accounts ranked by absolute margin dollar loss (not %)
+- Exclude immaterial accounts unless they have zero revenue with non-trivial cost
+
+3. Dollar Impact Chart Data
+- Output a ranked list of accounts with margin $ (negative values)
+- Format for visualization (account name + margin $)
+- Sort from worst to best
+
+4. Account-Level Breakdown Table
+For each of the top 20 accounts, output:
+- Account name
+- Customer tier
+- Annualized revenue
+- Annualized cost
+- Margin $ (revenue - cost)
+- Margin %
+- Runtime (if available)
+- Cost per runtime unit (e.g., $/sync hr)
+- Key drivers (categorize into: DLW cost, connection cost, low scale, no revenue, etc.)
+
+5. Driver Classification
+Classify each account into 1–2 primary drivers using rules:
+- "DLW cost" if compute-heavy cost dominates
+- "connection" if connection count / overhead dominates
+- "low scale" if revenue is very low relative to cost
+- "no revenue" if revenue = 0
+
+6. Output Format
+- Present the top accounts table in a clean, tabular format
+- Include a short labeled section header:
+  "Top 20 Material Named Accounts by Margin Impact"
+- Keep narrative minimal; prioritize structured output
